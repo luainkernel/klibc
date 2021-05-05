@@ -27,6 +27,7 @@ __extern __noreturn longjmp(jmp_buf, int);
 struct __sigjmp_buf {
 	jmp_buf __jmpbuf;
 	sigset_t __sigs;
+	unsigned char __sigs_saved;
 };
 
 typedef struct __sigjmp_buf sigjmp_buf[1];
@@ -34,7 +35,11 @@ typedef struct __sigjmp_buf sigjmp_buf[1];
 #define sigsetjmp(__env, __save) \
 ({ \
   struct __sigjmp_buf *__e = (__env); \
-  sigprocmask(0, NULL, &__e->__sigs); \
+  if (__save) { \
+    sigprocmask(0, NULL, &__e->__sigs); \
+    __e->__sigs_saved = 1; \
+  } else \
+    __e->__sigs_saved = 0; \
   setjmp(__e->__jmpbuf); \
 })
 

@@ -10,6 +10,7 @@
 
 __noreturn siglongjmp(sigjmp_buf buf, int retval)
 {
-	sigprocmask(SIG_SETMASK, &buf->__sigs, NULL);
+	if (buf->__sigs_saved)
+		sigprocmask(SIG_SETMASK, &buf->__sigs, NULL);
 	longjmp(buf->__jmpbuf, retval);
 }

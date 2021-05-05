@@ -13,8 +13,7 @@ Compiling with -O0 is more likely to work on gcc 3.
 setjmp()/longjmp():
 -------------------
 setjmp() and longjmp() *do not* save signal state.  sigsetjmp() and
-siglongjmp() *do* save the signal mask -- regardless of the value of
-the extra argument.
+siglongjmp() *do* save the signal mask if the extra argument is nonzero.
 
 The standards actually state that if you pass longjmp() a final value
 of zero the library should change that to a 1!  Presumably the reason
