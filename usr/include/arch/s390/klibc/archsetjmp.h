@@ -16,7 +16,7 @@ struct __jmp_buf {
 
 struct __jmp_buf {
 	uint64_t __gregs[10]; /* general registers r6-r15 */
-	uint64_t __fpregs[4]; /* fp registers f1, f3, f5, f7 */
+	uint64_t __fpregs[8]; /* fp registers f8-f15 */
 };
 
 #endif /* __s390x__ */
