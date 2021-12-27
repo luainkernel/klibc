@@ -1,6 +1,7 @@
 #ifndef _SYS_PRCTL_H
 #define _SYS_PRCTL_H
 
+#include <sys/types.h>
 #include <klibc/extern.h>
 #include <linux/prctl.h>
 

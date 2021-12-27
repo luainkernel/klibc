@@ -1,6 +1,7 @@
 #ifndef _SYS_CAPABILITY_H
 #define _SYS_CAPABILITY_H
 
+#include <sys/types.h>
 #include <klibc/extern.h>
 #include <linux/capability.h>
 

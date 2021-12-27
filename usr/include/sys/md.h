@@ -21,6 +21,8 @@
 #ifndef _SYS_MD_H
 #define _SYS_MD_H
 
+#include <sys/types.h>
+
 #define LEVEL_MULTIPATH         (-4)
 #define LEVEL_LINEAR            (-1)
 #define LEVEL_FAULTY            (-5)

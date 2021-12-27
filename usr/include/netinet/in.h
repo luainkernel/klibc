@@ -5,6 +5,7 @@
 #ifndef _NETINET_IN_H
 #define _NETINET_IN_H
 
+#include <sys/types.h>
 #include <klibc/extern.h>
 #include <stdint.h>
 #include <endian.h>		/* Must be included *before* <linux/in.h> */

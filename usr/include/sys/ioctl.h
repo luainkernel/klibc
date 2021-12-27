@@ -5,6 +5,7 @@
 #ifndef _SYS_IOCTL_H
 #define _SYS_IOCTL_H
 
+#include <sys/types.h>
 #include <klibc/extern.h>
 #include <linux/ioctl.h>
 #include <asm/ioctls.h>

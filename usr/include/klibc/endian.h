@@ -7,7 +7,7 @@
 #ifndef _KLIBC_ENDIAN_H
 #define _KLIBC_ENDIAN_H
 
-#include <klibc/compiler.h>
+#include <sys/types.h>
 #include <asm/byteorder.h>
 
 /* Linux' asm/byteorder.h defines either __LITTLE_ENDIAN or
