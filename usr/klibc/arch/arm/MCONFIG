@@ -18,8 +18,6 @@ KLIBCSTRIPFLAGS += -R .ARM.exidx
 ifeq ($(CONFIG_KLIBC_THUMB),y)
 CPU_ARCH := $(CPU_ARCH)t
 KLIBCREQFLAGS += -mthumb
-KLIBCLDFLAGS  += --thumb-entry _start
-KLIBCEMAIN     = --thumb-entry main
 KLIBCREQFLAGS += -mabi=aapcs-linux
 KLIBCSHAREDFLAGS = $(LD_IMAGE_BASE_OPT) 0x380000
 else
