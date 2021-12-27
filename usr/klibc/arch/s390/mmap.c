@@ -58,7 +58,7 @@ void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 	unsigned long __res;
 
 	__asm__ __volatile__ (
-		"    svc %b1\n"
+		"    svc %1\n"
 		: "=d" (__svcres)
 		: "i" (__NR_mmap),
 		  "0" (__arg1)
