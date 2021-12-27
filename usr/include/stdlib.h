@@ -55,11 +55,11 @@ __extern void *bsearch(const void *, const void *, size_t, size_t,
 		       __comparefunc_t);
 __extern void qsort(void *, size_t, size_t, __comparefunc_t);
 
-__extern long jrand48(unsigned short *);
+__extern long jrand48(unsigned short[3]);
 __extern long mrand48(void);
-__extern long nrand48(unsigned short *);
+__extern long nrand48(unsigned short[3]);
 __extern long lrand48(void);
-__extern unsigned short *seed48(const unsigned short *);
+__extern unsigned short *seed48(const unsigned short[3]);
 __extern void srand48(long);
 
 #define RAND_MAX 0x7fffffff
