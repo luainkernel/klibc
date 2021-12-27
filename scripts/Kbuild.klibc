@@ -115,7 +115,7 @@ KLIBCCPPFLAGS    := -nostdinc -iwithprefix include \
                     -I$(KLIBCOBJ)/../include		\
                     -I$(KLIBCINC)
 ifeq ($(cc-name),clang)
-KLIBCCPPFLAGS    += -I$(shell $(KLIBCCC) $(KLIBCCFLAGS) --print-file-name=include)
+KLIBCCPPFLAGS    += -isystem $(shell $(KLIBCCC) $(KLIBCCFLAGS) --print-file-name=include)
 endif
 
 # kernel include paths
