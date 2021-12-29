@@ -25,7 +25,7 @@ else
 KLIBCOPTFLAGS     += -fno-asynchronous-unwind-tables
 endif
 KLIBCBITSIZE      = 64
-KLIBCLDFLAGS      = -m elf_x86_64
+KLIBCLDFLAGS      = -m elf_x86_64 $(LD_IMAGE_BASE_OPT) 0x00400000
 
 # Extra linkflags when building the shared version of the library
 # This address needs to be reachable using normal inter-module

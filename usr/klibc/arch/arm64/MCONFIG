@@ -13,6 +13,7 @@ CPU_TUNE ?= generic
 KLIBCOPTFLAGS += -g -Os -march=$(CPU_ARCH) -mtune=$(CPU_TUNE)
 KLIBCBITSIZE  = 64
 KLIBCREQFLAGS += -fno-exceptions -mgeneral-regs-only
+KLIBCLDFLAGS  = $(LD_IMAGE_BASE_OPT) 0x00400000
 
 # Extra linkflags when building the shared version of the library
 # This address needs to be reachable using normal inter-module
