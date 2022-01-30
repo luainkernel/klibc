@@ -103,6 +103,9 @@ header:
 	$(Q)mkdir -p $(INSTALLROOT)$(INSTALLDIR)/$(KCROSS)lib
 	$(Q)mkdir -p $(INSTALLROOT)$(INSTALLDIR)/$(KCROSS)bin
 	$(Q)cp -rfL $(KLIBCKERNELSRC)/include/. $(INSTALLROOT)$(INSTALLDIR)/$(KCROSS)include/.
+ifneq ($(srctree),$(objtree))
+	$(Q)cp -rf $(srctree)/usr/include/. $(INSTALLROOT)$(INSTALLDIR)/$(KCROSS)include/.
+endif
 	$(Q)cp -rf usr/include/. $(INSTALLROOT)$(INSTALLDIR)/$(KCROSS)include/.
 	$(Q)chmod -R a+rX,go-w $(INSTALLROOT)$(INSTALLDIR)/$(KCROSS)include
 	$(Q)$(install-data) $(srctree)/klcc/klcc.1 $(INSTALLROOT)$(mandir)/man1/$(KCROSS)klcc.1
