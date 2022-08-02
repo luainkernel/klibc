@@ -26,13 +26,10 @@ prefix, on the "make" command line.  You also need to set ARCH to the
 appropriate kernel architecture name on the "make headers_install"
 command line.
 
-IMPORTANT: if you're on a 64-bit machine with a 32-bit userland
-(ia64, mips64, ppc64 sparc64, s390x or x86_64), and you want to
-build the 32-bit version: you need to set KLIBCARCH to the 32-bit
-architecture as well as set up the linux/include/asm symlink to
-point to the 32-bit architecture.  Building the 32-bit architecture
-usually (but not always) produces smaller binaries, and is likely
-to be better tested.
+IMPORTANT: if you're on a 64-bit machine with a 32-bit userland, and
+you want to build the 32-bit version: you need to set KLIBCARCH to the
+32-bit architecture.  Building the 32-bit architecture usually (but
+not always) produces smaller binaries.
 
 If you are on ARM, and want to build a thumb version of the library
 (this is supported), change OPTFLAGS in arch/arm/MCONFIG to build
