@@ -33,7 +33,9 @@ struct flock {
 	__kernel_loff_t l_start;
 	__kernel_loff_t l_len;
 	__kernel_pid_t  l_pid;
+#ifdef __ARCH_FLOCK64_PAD
         __ARCH_FLOCK64_PAD
+#endif
 };
 
 #ifdef F_GETLK64
