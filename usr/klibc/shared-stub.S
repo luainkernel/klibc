@@ -11,3 +11,12 @@
         .ascii SOHASH
         .ascii ".so"
         .byte 0
+
+#
+# Ensure that every executable includes some static data, as
+# ELF loaders tend to assume this - see
+# <https://bugs.debian.org/919921>, <https://bugs.debian.org/1016718>.
+#
+
+	.section ".data"
+	.byte 0

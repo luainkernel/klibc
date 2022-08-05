@@ -99,17 +99,17 @@ LIBC     := libc.a
 SOLIB    := libc.so
 SOHASH   := klibc.so
 CRT0     := arch/$(KLIBCARCHDIR)/crt0.o
-INTERP_O := interp.o
+SHARED_STUB := shared-stub.o
 
 always   := $(LIBC)
 ifdef KLIBCSHAREDFLAGS
-always   += $(SOLIB) $(SOHASH) $(INTERP_O)
+always   += $(SOLIB) $(SOHASH) $(SHARED_STUB)
 endif
 LIBC     := $(call objectify,$(LIBC))
 SOLIB    := $(call objectify,$(SOLIB))
 SOHASH   := $(call objectify,$(SOHASH))
 CRT0     := $(call objectify,$(CRT0))
-INTERP_O := $(call objectify,$(INTERP_O))
+SHARED_STUB := $(call objectify,$(SHARED_STUB))
 
 SOLIBHASH = $(shell cat $(SOLIB).hash)
 
@@ -179,8 +179,8 @@ $(SOHASH): $(SOLIB) $(SOLIB).hash
 
 
 #####
-# build interp.o
-targets += interp.o
+# build shared-stub.o
+targets += shared-stub.o
 
 quiet_cmd_interp = BUILD   $@
       cmd_interp = $(KLIBCCC) $(klibccflags) -D__ASSEMBLY__     \
@@ -188,7 +188,7 @@ quiet_cmd_interp = BUILD   $@
 			     -DSOHASH=\"$(SOLIBHASH)\" \
 			     -c -o $@ $<
 
-$(INTERP_O): $(obj)/interp.S $(SOLIB).hash
+$(SHARED_STUB): $(obj)/shared-stub.S $(SOLIB).hash
 	$(call if_changed,interp)
 
 #####
@@ -199,7 +199,7 @@ install-rule:
 	  $(shell $(install-data) $(f) \
 	          $(INSTALLROOT)$(INSTALLDIR)/$(KLIBCCROSS)lib))
 ifdef KLIBCSHAREDFLAGS
-	$(Q)$(foreach f, $(SOLIB) $(INTERP_O), \
+	$(Q)$(foreach f, $(SOLIB) $(SHARED_STUB), \
 	  $(shell $(install-data) $(f) \
 	          $(INSTALLROOT)$(INSTALLDIR)/$(KLIBCCROSS)lib))
 	$(Q)$(install-lib) $(obj)/klibc-$(SOLIBHASH).so \

@@ -90,7 +90,7 @@ install -m 444 usr/kinit/README %{buildroot}%{bindocdir}/README.kinit
 rm -rf $RPM_BUILD_ROOT
 
 #
-# Note: libc.so and interp.o are technically -devel files, but
+# Note: libc.so and shared-stub.o are technically -devel files, but
 # put them in this package until we can make really, really sure
 # the dependency system can avoid confusion.  (In fact, it would be
 # good to eventually get them out of here, so that multiple runtimes
@@ -100,7 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 /lib/klibc-*.so
 %{klibcdir}/lib/*.so
-%{klibcdir}/lib/interp.o
+%{klibcdir}/lib/shared-stub.o
 
 %files devel
 %defattr(-,root,root,-)

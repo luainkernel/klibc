@@ -1,5 +1,5 @@
 errlist.c
-.interp.o.d
+.shared-stub.o.d
 klibc*.so
 klib.list
 .klib.list.cmd
