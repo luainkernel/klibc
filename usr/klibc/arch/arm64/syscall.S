@@ -17,7 +17,7 @@ __syscall_common:
 	b.ge	2f
 	neg	x0, x0
 	ldr	x8, 1f
-	str	x0, [x8]
+	str	w0, [x8]
 	mov	x0, #-1
 2:
 	ret
