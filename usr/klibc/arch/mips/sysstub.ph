@@ -17,11 +17,9 @@ sub make_sysstub($$$$$@) {
     print OUT "#include <machine/asm.h>\n";
     print OUT "#include <asm/unistd.h>\n";
     print OUT "\n";
-    print OUT "\t.set noreorder\n";
-    print OUT "\n";
     print OUT "LEAF(${fname})\n";
-    print OUT "\tj\t__syscall_${stype}\n";
     print OUT "\t  li\tv0, __NR_${sname}\n";
+    print OUT "\tj\t__syscall_${stype}\n";
     print OUT "\tEND(${fname})\n";
     close(OUT);
 }
