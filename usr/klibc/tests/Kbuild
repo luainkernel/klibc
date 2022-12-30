@@ -15,6 +15,12 @@ KLIBCCFLAGS_testvsnp.o := -Wno-format
 # warning requires a value.
 KLIBCCFLAGS_malloctest3.o := $(call cc-option,-Wno-alloc-size-larger-than)
 
+# Disable optimisation of these test cases based on compiler knowledge
+# of what the functions should do.
+KLIBCCFLAGS_strsearch.o := -fno-builtin-strchr -fno-builtin-strrchr \
+			   -fno-builtin-strspn -fno-builtin-strcspn \
+			   -fno-builtin-strpbrk -fno-builtin-strstr
+
 static-y := $(test-files:.c=)
 shared-y := $(addsuffix .shared, $(static-y))
 
@@ -49,6 +55,7 @@ stat.shared-y		:= stat.o
 statfs.shared-y		:= statfs.o
 stdio.shared-y		:= stdio.o
 strlcpycat.shared-y	:= strlcpycat.o
+strsearch.shared-y	:= strsearch.o
 strtoimax.shared-y	:= strtoimax.o
 strtotime.shared-y	:= strtotime.o
 sysconf.shared-y	:= sysconf.o
