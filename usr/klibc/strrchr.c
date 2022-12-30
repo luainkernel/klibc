@@ -9,9 +9,11 @@ char *strrchr(const char *s, int c)
 {
 	const char *found = NULL;
 
-	while (*s) {
+	for (;;) {
 		if (*s == (char)c)
 			found = s;
+		if (!*s)
+			break;
 		s++;
 	}
 
