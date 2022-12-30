@@ -18,7 +18,10 @@ void *memmem(const void *haystack, size_t n, const void *needle, size_t m)
 
 	size_t j, k, l;
 
-	if (m > n || !m || !n)
+	if (!m)
+		return (void *)haystack;
+
+	if (m > n)
 		return NULL;
 
 	if (1 != m) {
