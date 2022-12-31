@@ -50,7 +50,7 @@ static void do_preformat(const struct stat *st)
 	return;
 }
 
-static void do_stat(const struct stat *st, const char *path)
+static void do_stat(const struct stat *st, int dir_fd, const char *path)
 {
 	char *fmt, *link_name;
 	int rc;
@@ -138,7 +138,7 @@ static void do_stat(const struct stat *st, const char *path)
 			perror("malloc");
 			exit(1);
 		}
-		rc = readlink(path, link_name, max_linksiz);
+		rc = readlinkat(dir_fd, path, link_name, max_linksiz);
 		if (rc == -1) {
 			free(link_name);
 			perror("readlink");
@@ -156,28 +156,26 @@ static void do_stat(const struct stat *st, const char *path)
 static void do_dir(const char *path, int preformat)
 {
 	DIR *dir;
+	int dir_fd;
 	struct dirent *dent;
 	struct stat st;
-
-	if (chdir(path) == -1) {
-		perror(path);
-		exit(1);
-	}
 
 	dir = opendir(path);
 	if (dir == NULL) {
 		perror(path);
 		exit(1);
 	}
+	dir_fd = dirfd(dir);
 
 	while ((dent = readdir(dir)) != NULL) {
-		if (lstat(dent->d_name, &st)) {
+		if (fstatat(dir_fd, dent->d_name, &st,
+			    AT_SYMLINK_NOFOLLOW)) {
 			perror(dent->d_name);
 			exit(1);
 		}
 		(preformat) ?
 			do_preformat(&st) :
-			do_stat(&st, dent->d_name);
+			do_stat(&st, dir_fd, dent->d_name);
 	}
 
 	closedir(dir);
@@ -218,7 +216,7 @@ int main(int argc, char *argv[])
 
 		S_ISDIR(st.st_mode) ?
 			do_dir(argv[i], 0) :
-			do_stat(&st, argv[i]);
+			do_stat(&st, AT_FDCWD, argv[i]);
 	}
 
 	return 0;
