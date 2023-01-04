@@ -3,8 +3,6 @@
 
 #include <sys/types.h>
 
-#define _STATBUF_ST_NSEC
-
 struct stat {
 	unsigned int		st_dev;
 	unsigned int		st_pad0[3]; /* Reserved for st_dev expansion */
@@ -22,9 +20,14 @@ struct stat {
 
 	off_t			st_size;
 
-	struct timespec		st_atim;
-	struct timespec		st_mtim;
-	struct timespec		st_ctim;
+	unsigned int		st_atime;
+	unsigned int		st_atimensec;
+
+	unsigned int		st_mtime;
+	unsigned int		st_mtimensec;
+
+	unsigned int		st_ctime;
+	unsigned int		st_ctimensec;
 
 	unsigned int		st_blksize;
 	unsigned int		st_pad2;
