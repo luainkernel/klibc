@@ -6,9 +6,66 @@
 #define _SYS_TIME_H
 
 #include <klibc/extern.h>
+#include <klibc/endian.h>
 #include <stddef.h>
 #include <sys/types.h>
-#include <linux/time.h>
+
+/* struct timespec as used by current kernel UAPI (time64 on 32-bit) */
+struct timespec {
+	__kernel_time64_t	tv_sec;
+#if __BYTE_ORDER == __BIG_ENDIAN && __BITS_PER_LONG == 32
+	int			:32;
+#endif
+	long			tv_nsec;
+#if __BYTE_ORDER == __LITTLE_ENDIAN && __BITS_PER_LONG == 32
+	int			:32;
+#endif
+};
+
+/* struct timeval with 64-bit time, not used by kernel UAPI */
+struct timeval {
+	__kernel_time64_t	tv_sec;
+	__kernel_suseconds_t	tv_usec;
+};
+
+/* struct timeval as used by old kernel UAPI */
+struct timeval_old {
+	__kernel_time_t		tv_sec;
+	__kernel_suseconds_t	tv_usec;
+};
+
+struct itimerspec {
+	struct timespec	it_interval;
+	struct timespec it_value;
+};
+
+struct itimerval {
+	struct timeval_old	it_interval;
+	struct timeval_old	it_value;
+};
+
+struct timezone {
+	int	tz_minuteswest;
+	int	tz_dsttime;
+};
+
+#define ITIMER_REAL		0
+#define ITIMER_VIRTUAL		1
+#define ITIMER_PROF		2
+
+#define CLOCK_REALTIME			0
+#define CLOCK_MONOTONIC			1
+#define CLOCK_PROCESS_CPUTIME_ID	2
+#define CLOCK_THREAD_CPUTIME_ID		3
+#define CLOCK_MONOTONIC_RAW		4
+#define CLOCK_REALTIME_COARSE		5
+#define CLOCK_MONOTONIC_COARSE		6
+#define CLOCK_BOOTTIME			7
+#define CLOCK_REALTIME_ALARM		8
+#define CLOCK_BOOTTIME_ALARM		9
+#define CLOCK_TAI			11
+
+#define TIMER_ABSTIME			0x01
 
 /* The 2.6.20 Linux headers always #define FD_ZERO __FD_ZERO, etc, in
    <linux/time.h> but not all architectures define the
