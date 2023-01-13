@@ -166,11 +166,7 @@ int dup3(int, int, int);
 int ioctl(int, int, void *);
 int flock(int, int);
 <?> int _newselect,select::select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
-#if defined(__NR_pselect7)
-int pselect7::__pselect7(int, fd_set *, fd_set *, fd_set *, struct timespec *, const sigset_t *, size_t);
-#elif defined(__NR_pselect6)
 int pselect6::__pselect6(int, fd_set *, fd_set *, fd_set *, struct timespec *, const struct __pselect6 *);
-#endif
 <?> int poll(struct pollfd *, nfds_t, long);
 <?> int ppoll::__ppoll(struct pollfd *, nfds_t, struct timespec *, const sigset_t *, size_t);
 int fsync(int);
