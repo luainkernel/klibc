@@ -176,9 +176,7 @@ int dup3(int, int, int);
 int ioctl(int, int, void *);
 int flock(int, int);
 <?> int _newselect,select::select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
-#if defined(__NR_pselect) && !_KLIBC_USE_RT_SIG
-int pselect(int, fd_set *, fd_set *, fd_set *, const struct timespec *, const sigset_t *);
-#elif defined(__NR_pselect7)
+#if defined(__NR_pselect7)
 int pselect7::__pselect7(int, fd_set *, fd_set *, fd_set *, struct timespec *, const sigset_t *, size_t);
 #elif defined(__NR_pselect6)
 int pselect6::__pselect6(int, fd_set *, fd_set *, fd_set *, struct timespec *, const struct __pselect6 *);
@@ -201,11 +199,7 @@ ssize_t sendfile64,sendfile::sendfile(int, int, off_t *, size_t, off_t);
 
 /*
  * Signal operations
- *
- * We really should get rid of the non-rt_* of these, but that takes
- * sanitizing <signal.h> for all architectures, sigh.  See <klibc/config.h>.
  */
-#if _KLIBC_USE_RT_SIG
 <!sparc,sparc64,alpha,ia64> int rt_sigaction::__rt_sigaction(int, const struct sigaction *, struct sigaction *, size_t);
 <sparc,sparc64> int rt_sigaction::____rt_sigaction(int, const struct sigaction *, struct sigaction *, void *, size_t);
 <alpha> int rt_sigaction::____rt_sigaction(int, const struct sigaction *, struct sigaction *, size_t, void *);
@@ -213,22 +207,6 @@ ssize_t sendfile64,sendfile::sendfile(int, int, off_t *, size_t, off_t);
 int rt_sigsuspend::__rt_sigsuspend(const sigset_t *, size_t);
 int rt_sigpending::__rt_sigpending(sigset_t *, size_t);
 int rt_sigprocmask::__rt_sigprocmask(int, const sigset_t *, sigset_t *, size_t);
-#else
-int sigaction::__sigaction(int, const struct sigaction *, struct sigaction *);
-int sigpending(sigset_t *);
-int sigprocmask(int, const sigset_t *, sigset_t *);
-/*
- * There is no single calling convention for the old sigsuspend.
- * If your architecture is not listed here, building klibc shall
- * rather fail than use a broken calling convention.
- * You better switch to RT signals on those architectures:
- * blackfin h8300 microblaze mips.
- *
- * The arguments other than the sigset_t are assumed ignored.
- */
-<sh,sparc,alpha,ppc,sparc64> int sigsuspend::__sigsuspend_s(sigset_t);
-<arm,frv,i386,m68k,mn10300,s390,s390x> int sigsuspend::__sigsuspend_xxs(int, int, sigset_t);
-#endif
 <s390,s390x,sparc,sparc64> void rt_sigreturn::__sigreturn();
 int kill(pid_t, int);
 <?> unsigned int alarm(unsigned int);

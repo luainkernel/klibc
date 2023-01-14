@@ -15,11 +15,7 @@ typedef struct sigaction *act_type;
 typedef const struct sigaction *act_type;
 #endif
 
-#if _KLIBC_USE_RT_SIG
 __extern int __rt_sigaction(int, act_type, struct sigaction *, size_t);
-#else
-__extern int __sigaction(int, act_type, struct sigaction *);
-#endif
 
 int sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 {
@@ -46,7 +42,6 @@ int sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 		act = &sa;
 	}
 
-#if _KLIBC_USE_RT_SIG
 	/* Check that we have the right signal API definitions */
 	(void)sizeof(char[_NSIG >= 64 ? 1 : -1]);
 	(void)sizeof(char[sizeof(sigset_t) * 8 >= _NSIG ? 1 : -1]);
@@ -55,9 +50,6 @@ int sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 			  ? 1 : -1]);
 
 	rv = __rt_sigaction(sig, (act_type)act, oact, sizeof(sigset_t));
-#else
-	rv = __sigaction(sig, (act_type)act, oact);
-#endif
 
 #if _KLIBC_NEEDS_SA_RESTORER
 	if (oact && (oact->sa_restorer == &__sigreturn)) {

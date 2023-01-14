@@ -131,25 +131,6 @@
 
 
 /*
- * _KLIBC_USE_RT_SIG:
- *
- *      Indicates that this architecture should use the rt_sig*()
- *      family of system calls, even if the older system calls are
- *      provided.  This requires that <asm/signal.h> is correct for
- *      using with the rt_sig*() system calls.  This is the default if
- *      the older system calls are undefined in <asm/unistd.h>.
- *
- */
-#ifndef _KLIBC_USE_RT_SIG
-# ifdef __NR_sigaction
-#  define _KLIBC_USE_RT_SIG 0
-# else
-#  define _KLIBC_USE_RT_SIG 1
-# endif
-#endif
-
-
-/*
  * _KLIBC_NEEDS_SA_RESTORER:
  *
  *	Some architectures, like x86-64 and some i386 Fedora kernels,

@@ -9,8 +9,6 @@
 #ifndef _KLIBC_ARCHCONFIG_H
 #define _KLIBC_ARCHCONFIG_H
 
-/* Use rt_* signals */
-#define _KLIBC_USE_RT_SIG 1
 #define _KLIBC_NO_MMU 0
 #define _KLIBC_REAL_VFORK 1
 

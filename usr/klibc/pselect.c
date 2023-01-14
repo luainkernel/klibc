@@ -5,11 +5,7 @@
 #include <sys/select.h>
 #include <sys/syscall.h>
 
-#if defined(__NR_pselect) && !_KLIBC_USE_RT_SIG
-
-/* Don't need to do anything here; use syscall stub directly */
-
-#elif defined(__NR_pselect7)
+#if defined(__NR_pselect7)
 
 __extern int __pselect7(int, fd_set *, fd_set *, fd_set *,
 			const struct timespec *, const sigset_t *, size_t);
