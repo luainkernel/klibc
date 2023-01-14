@@ -165,7 +165,6 @@ int dup3(int, int, int);
 <!i386,ppc64> int fcntl64,fcntl::fcntl(int, int, unsigned long);
 int ioctl(int, int, void *);
 int flock(int, int);
-<?> int _newselect,select::select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 int pselect6::__pselect6(int, fd_set *, fd_set *, fd_set *, struct timespec *, const struct __pselect6 *);
 <?> int poll(struct pollfd *, nfds_t, long);
 <?> int ppoll::__ppoll(struct pollfd *, nfds_t, struct timespec *, const sigset_t *, size_t);
