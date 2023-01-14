@@ -21,7 +21,8 @@ int select(int nfds, fd_set *readfds, fd_set *writefds,
 		ts.tv_nsec = timeout->tv_usec * 1000;
 	}
 
-	result = __pselect6(nfds, readfds, writefds, exceptfds, &ts, NULL);
+	result = __pselect6(nfds, readfds, writefds, exceptfds,
+			    timeout ? &ts : NULL, NULL);
 
 	if (timeout) {
 		timeout->tv_sec = ts.tv_sec;
