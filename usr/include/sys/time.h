@@ -50,6 +50,9 @@ static inline int FD_ISSET(int __fd, fd_set *__fdsetp)
 
 __extern int gettimeofday(struct timeval *, struct timezone *);
 __extern int settimeofday(const struct timeval *, const struct timezone *);
+__extern int clock_gettime(clockid_t, struct timespec *);
+__extern int clock_settime(clockid_t, const struct timespec *);
+__extern int clock_nanosleep(clockid_t, int, const struct timespec *, struct timespec *);
 __extern int getitimer(int, struct itimerval *);
 __extern int setitimer(int, const struct itimerval *, struct itimerval *);
 __extern int utimes(const char *, const struct timeval[2]);

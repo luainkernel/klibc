@@ -33,6 +33,7 @@ typedef __kernel_key_t key_t;
 typedef __kernel_suseconds_t suseconds_t;
 /* typedef __kernel_timer_t	timer_t; */
 typedef int timer_t;
+typedef __kernel_clockid_t clockid_t;
 
 typedef __kernel_uid32_t uid_t;
 typedef __kernel_gid32_t gid_t;

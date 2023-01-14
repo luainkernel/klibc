@@ -29,7 +29,8 @@ klib-y += vsnprintf.o snprintf.o vsprintf.o sprintf.o \
 	  statfs.o fstatfs.o umount.o \
 	  creat.o open.o openat.o \
 	  fread2.o fwrite2.o fgets.o fputc.o fputs.o puts.o putchar.o \
-	  sleep.o usleep.o strtotimespec.o strtotimeval.o \
+	  clock_nanosleep.o nanosleep.o sleep.o usleep.o \
+	  strtotimespec.o strtotimeval.o \
 	  raise.o abort.o assert.o alarm.o pause.o \
 	  __signal.o sysv_signal.o bsd_signal.o siglist.o sigabbrev.o \
 	  siglongjmp.o \
@@ -53,7 +54,8 @@ klib-y += vsnprintf.o snprintf.o vsprintf.o sprintf.o \
 	  clearenv.o nullenv.o \
 	  getopt.o getopt_long.o readdir.o scandir.o alphasort.o remove.o \
 	  syslog.o closelog.o pty.o isatty.o reboot.o \
-	  time.o lseek.o nice.o getpriority.o \
+	  gettimeofday.o settimeofday.o time.o \
+	  lseek.o nice.o getpriority.o \
 	  futimesat.o utime.o utimes.o \
 	  qsort.o bsearch.o \
 	  lrand48.o jrand48.o mrand48.o nrand48.o srand48.o seed48.o \

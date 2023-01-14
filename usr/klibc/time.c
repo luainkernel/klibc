@@ -6,8 +6,6 @@
 #include <sys/time.h>
 #include <sys/syscall.h>
 
-#ifndef __NR_time
-
 time_t time(time_t * t)
 {
 	struct timeval tv;
@@ -19,5 +17,3 @@ time_t time(time_t * t)
 
 	return (time_t) tv.tv_sec;
 }
-
-#endif

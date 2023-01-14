@@ -201,11 +201,12 @@ int setitimer(int, const struct itimerval *, struct itimerval *);
 /*
  * Time-related system calls
  */
-<?> time_t time(time_t *);
 clock_t times(struct tms *);
-int gettimeofday(struct timeval *, struct timezone *);
-int settimeofday(const struct timeval *, const struct timezone *);
-int nanosleep(const struct timespec *, struct timespec *);
+int gettimeofday::__gettimeofday(void *, struct timezone *);
+int settimeofday::__settimeofday(const void *, const struct timezone *);
+int clock_gettime(clockid_t, struct timespec *);
+int clock_settime(clockid_t, const struct timespec *);
+int clock_nanosleep::__clock_nanosleep(clockid_t, int, const struct timespec *, struct timespec *);
 <?> int pause();
 
 /*
