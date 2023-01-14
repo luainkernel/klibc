@@ -53,7 +53,8 @@ klib-y += vsnprintf.o snprintf.o vsprintf.o sprintf.o \
 	  clearenv.o nullenv.o \
 	  getopt.o getopt_long.o readdir.o scandir.o alphasort.o remove.o \
 	  syslog.o closelog.o pty.o isatty.o reboot.o \
-	  time.o utime.o lseek.o nice.o getpriority.o \
+	  time.o lseek.o nice.o getpriority.o \
+	  futimesat.o utime.o utimes.o \
 	  qsort.o bsearch.o \
 	  lrand48.o jrand48.o mrand48.o nrand48.o srand48.o seed48.o \
 	  inet/inet_ntoa.o inet/inet_aton.o inet/inet_addr.o \
@@ -61,7 +62,7 @@ klib-y += vsnprintf.o snprintf.o vsprintf.o sprintf.o \
 	  accept.o send.o recv.o \
 	  access.o chmod.o chown.o dup2.o mknod.o poll.o rename.o renameat.o \
 	  fstat.o fstatat.o lstat.o stat.o \
-	  lchown.o link.o rmdir.o unlink.o utimes.o mkdir.o \
+	  lchown.o link.o rmdir.o unlink.o mkdir.o \
 	  readlink.o realpath.o select.o symlink.o pipe.o \
 	  ctype/isalnum.o ctype/isalpha.o ctype/isascii.o \
 	  ctype/isblank.o ctype/iscntrl.o ctype/isdigit.o \

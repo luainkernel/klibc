@@ -3,7 +3,7 @@
 #include <sys/stat.h>
 #include <sys/syscall.h>
 
-int utimes(const char *file, const struct timeval tvp[2])
+int futimesat(int dirfd, const char *filename, const struct timeval tvp[2])
 {
 	struct timespec ts[2];
 
@@ -14,5 +14,5 @@ int utimes(const char *file, const struct timeval tvp[2])
 		ts[1].tv_nsec = tvp[1].tv_usec * 1000;
 	}
 
-	return utimensat(AT_FDCWD, file, &ts[0], 0);
+	return utimensat(dirfd, filename, &ts[0], 0);
 }
