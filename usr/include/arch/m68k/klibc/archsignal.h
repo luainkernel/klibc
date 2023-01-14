@@ -8,8 +8,13 @@
 #ifndef _KLIBC_ARCHSIGNAL_H
 #define _KLIBC_ARCHSIGNAL_H
 
-#define NSIG		32
-typedef unsigned long sigset_t;
+#define _NSIG		64
+#define _NSIG_BPW	32
+#define _NSIG_WORDS	(_NSIG / _NSIG_BPW)
+
+typedef struct {
+	unsigned long sig[_NSIG_WORDS];
+} sigset_t;
 
 #define SIGHUP		1
 #define SIGINT		2
@@ -58,9 +63,9 @@ struct sigaction {
 		__sighandler_t _sa_handler;
 		void (*_sa_sigaction)(int, struct siginfo *, void *);
 	} _u;
-	sigset_t sa_mask;
-	unsigned long sa_flags;
-	void (*sa_restorer)(void);
+	unsigned int	sa_flags;
+	__sigrestore_t	sa_restorer;
+	sigset_t	sa_mask;        /* mask last for extensibility */
 };
 
 #define sa_handler	_u._sa_handler

@@ -16,5 +16,6 @@
 #define _KLIBC_NEEDS_SA_RESTORER 1
 /* Our restorer will call rt_sigreturn() */
 #define _KLIBC_NEEDS_SA_SIGINFO 1
+#define _KLIBC_USE_RT_SIG 1
 
 #endif				/* _KLIBC_ARCHCONFIG_H */

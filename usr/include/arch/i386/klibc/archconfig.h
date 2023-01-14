@@ -9,8 +9,7 @@
 #ifndef _KLIBC_ARCHCONFIG_H
 #define _KLIBC_ARCHCONFIG_H
 
-/* The i386 <asm/signal.h> is still not clean enough for this... */
-#define _KLIBC_USE_RT_SIG 0
+#define _KLIBC_USE_RT_SIG 1
 
 /* We have klibc/archinit.h and __libc_archinit() */
 #define _KLIBC_HAS_ARCHINIT 1

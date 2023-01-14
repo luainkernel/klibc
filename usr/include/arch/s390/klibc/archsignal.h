@@ -8,8 +8,13 @@
 #ifndef _KLIBC_ARCHSIGNAL_H
 #define _KLIBC_ARCHSIGNAL_H
 
-#define NSIG		32
-typedef unsigned long sigset_t;
+#define _NSIG		64
+#define _NSIG_BPW	__BITS_PER_LONG
+#define _NSIG_WORDS	(_NSIG / _NSIG_BPW)
+
+typedef struct {
+	unsigned long sig[_NSIG_WORDS];
+} sigset_t;
 
 #define SIGHUP		1
 #define SIGINT		2
