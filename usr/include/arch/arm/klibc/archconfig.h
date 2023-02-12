@@ -15,7 +15,4 @@
 # define _KLIBC_ARM_USE_BX 1
 #endif
 
-/* Use rt_* signals */
-#define _KLIBC_USE_RT_SIG 1
-
 #endif				/* _KLIBC_ARCHCONFIG_H */

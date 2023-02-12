@@ -4,8 +4,6 @@
 #include <errno.h>
 #include <sys/syscall.h>
 
-#if !defined(__NR_select) && !defined(__NR__newselect)
-
 struct __pselect6;
 __extern int __pselect6(int, fd_set *, fd_set *, fd_set *,
 			const struct timespec *, const struct __pselect6 *);
@@ -21,7 +19,8 @@ int select(int nfds, fd_set *readfds, fd_set *writefds,
 		ts.tv_nsec = timeout->tv_usec * 1000;
 	}
 
-	result = __pselect6(nfds, readfds, writefds, exceptfds, &ts, NULL);
+	result = __pselect6(nfds, readfds, writefds, exceptfds,
+			    timeout ? &ts : NULL, NULL);
 
 	if (timeout) {
 		timeout->tv_sec = ts.tv_sec;
@@ -30,5 +29,3 @@ int select(int nfds, fd_set *readfds, fd_set *writefds,
 
 	return result;
 }
-
-#endif

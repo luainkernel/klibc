@@ -8,7 +8,7 @@
 #include <klibc/extern.h>
 #include <sys/types.h>
 #include <sys/time.h>		/* For struct timespec */
-#include <klibc/archstat.h>
+#include <linux/stat.h>
 
 /* 2.6.21 kernels have once again hidden a bunch of stuff... */
 #ifndef S_IFMT
@@ -48,25 +48,39 @@
 #define S_IWOTH 00002
 #define S_IXOTH 00001
 
+#endif
+
 #define S_IRWXUGO	(S_IRWXU|S_IRWXG|S_IRWXO)
 #define S_IALLUGO	(S_ISUID|S_ISGID|S_ISVTX|S_IRWXUGO)
 #define S_IRUGO		(S_IRUSR|S_IRGRP|S_IROTH)
 #define S_IWUGO		(S_IWUSR|S_IWGRP|S_IWOTH)
 #define S_IXUGO		(S_IXUSR|S_IXGRP|S_IXOTH)
 
-#endif
-
-#ifdef _STATBUF_ST_NSEC
-  /* struct stat has struct timespec instead of time_t */
-# define st_atime  st_atim.tv_sec
-# define st_mtime  st_mtim.tv_sec
-# define st_ctime  st_ctim.tv_sec
-#endif
+/* struct stat with 64-bit time, not used by kernel UAPI */
+struct stat {
+        dev_t		st_dev;
+        ino_t		st_ino;
+        mode_t		st_mode;
+        unsigned int	st_nlink;
+        uid_t		st_uid;
+        gid_t		st_gid;
+        dev_t		st_rdev;
+        off_t		st_size;
+        int		st_blksize;
+        off_t		st_blocks;
+        struct timespec	st_atim;
+        struct timespec	st_mtim;
+        struct timespec	st_ctim;
+};
+#define st_atime	st_atim.tv_sec
+#define st_mtime	st_mtim.tv_sec
+#define st_ctime	st_ctim.tv_sec
 
 __extern int stat(const char *, struct stat *);
 __extern int fstat(int, struct stat *);
 __extern int fstatat(int, const char *, struct stat *, int);
 __extern int lstat(const char *, struct stat *);
+__extern int statx(int, const char *, int, unsigned int, struct statx *);
 __extern mode_t umask(mode_t);
 __extern int mknod(const char *, mode_t, dev_t);
 __extern int mknodat(int, const char *, mode_t, dev_t);

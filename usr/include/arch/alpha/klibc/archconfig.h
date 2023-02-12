@@ -9,7 +9,6 @@
 #ifndef _KLIBC_ARCHCONFIG_H
 #define _KLIBC_ARCHCONFIG_H
 
-#define _KLIBC_USE_RT_SIG 1
 /* We provide our own restorer that call rt_sigreturn() */
 #define _KLIBC_NEEDS_SA_SIGINFO 1
 #define _KLIBC_STATFS_F_TYPE_64 0

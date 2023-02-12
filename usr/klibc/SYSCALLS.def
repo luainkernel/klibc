@@ -133,24 +133,15 @@ int chroot(const char *);
 <?> int symlinkat(const char *, int, const char *);
 <?> int readlink(const char *, char *, size_t);
 <?> int readlinkat(int, const char *, char *, int);
-<?!ppc64> int stat64,stat::stat(const char *, struct stat *);
-<?!ppc64> int lstat64,lstat::lstat(const char *, struct stat *);
-<!ppc64> int fstat64,fstat::fstat(int, struct stat *);
-<ppc64> int stat::stat(const char *, struct stat *);
-<ppc64> int lstat::lstat(const char *, struct stat *);
-<ppc64> int fstat::fstat(int, struct stat *);
-/* XXX: Is this right?! */
-<?> int fstatat64,newfstatat,fstatat::fstatat(int, const char *, struct stat *, int);
+int statx(int, const char *, int, unsigned int, struct statx *);
 int getdents64,getdents::getdents(unsigned int, struct dirent *, unsigned int);
 <?> int chown32,chown::chown(const char *, uid_t, gid_t);
 int fchown32,fchown::fchown(int, uid_t, gid_t);
 <?> int fchownat(int, const char *, uid_t, gid_t, int);
 <?> int lchown32,lchown::lchown(const char *, uid_t, gid_t);
 int getcwd::__getcwd(char *, size_t);
-<?> int utime(const char *, const struct utimbuf *);
-<?> int utimes(const char *, const struct timeval *);
-<?> int futimesat(int, const char *, const struct timeval *);
-<?> int utimensat(int, const char *, const struct timespec *, int);
+<32> int utimensat_time64::utimensat(int, const char *, const struct timespec *, int);
+<64> int utimensat(int, const char *, const struct timespec *, int);
 <?> int inotify_init();
 <?> int inotify_add_watch(int, const char *, __u32);
 <?> int inotify_rm_watch(int, __u32);
@@ -175,16 +166,11 @@ int dup3(int, int, int);
 <!i386,ppc64> int fcntl64,fcntl::fcntl(int, int, unsigned long);
 int ioctl(int, int, void *);
 int flock(int, int);
-<?> int _newselect,select::select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
-#if defined(__NR_pselect) && !_KLIBC_USE_RT_SIG
-int pselect(int, fd_set *, fd_set *, fd_set *, const struct timespec *, const sigset_t *);
-#elif defined(__NR_pselect7)
-int pselect7::__pselect7(int, fd_set *, fd_set *, fd_set *, struct timespec *, const sigset_t *, size_t);
-#elif defined(__NR_pselect6)
-int pselect6::__pselect6(int, fd_set *, fd_set *, fd_set *, struct timespec *, const struct __pselect6 *);
-#endif
+<32> int pselect6_time64::__pselect6(int, fd_set *, fd_set *, fd_set *, struct timespec *, const struct __pselect6 *);
+<64> int pselect6::__pselect6(int, fd_set *, fd_set *, fd_set *, struct timespec *, const struct __pselect6 *);
 <?> int poll(struct pollfd *, nfds_t, long);
-<?> int ppoll::__ppoll(struct pollfd *, nfds_t, struct timespec *, const sigset_t *, size_t);
+<32> int ppoll_time64::__ppoll(struct pollfd *, nfds_t, struct timespec *, const sigset_t *, size_t);
+<64> int ppoll::__ppoll(struct pollfd *, nfds_t, struct timespec *, const sigset_t *, size_t);
 int fsync(int);
 int fdatasync,fsync::fdatasync(int);
 int readv(int, const struct iovec *, int);
@@ -201,11 +187,7 @@ ssize_t sendfile64,sendfile::sendfile(int, int, off_t *, size_t, off_t);
 
 /*
  * Signal operations
- *
- * We really should get rid of the non-rt_* of these, but that takes
- * sanitizing <signal.h> for all architectures, sigh.  See <klibc/config.h>.
  */
-#if _KLIBC_USE_RT_SIG
 <!sparc,sparc64,alpha,ia64> int rt_sigaction::__rt_sigaction(int, const struct sigaction *, struct sigaction *, size_t);
 <sparc,sparc64> int rt_sigaction::____rt_sigaction(int, const struct sigaction *, struct sigaction *, void *, size_t);
 <alpha> int rt_sigaction::____rt_sigaction(int, const struct sigaction *, struct sigaction *, size_t, void *);
@@ -213,22 +195,6 @@ ssize_t sendfile64,sendfile::sendfile(int, int, off_t *, size_t, off_t);
 int rt_sigsuspend::__rt_sigsuspend(const sigset_t *, size_t);
 int rt_sigpending::__rt_sigpending(sigset_t *, size_t);
 int rt_sigprocmask::__rt_sigprocmask(int, const sigset_t *, sigset_t *, size_t);
-#else
-int sigaction::__sigaction(int, const struct sigaction *, struct sigaction *);
-int sigpending(sigset_t *);
-int sigprocmask(int, const sigset_t *, sigset_t *);
-/*
- * There is no single calling convention for the old sigsuspend.
- * If your architecture is not listed here, building klibc shall
- * rather fail than use a broken calling convention.
- * You better switch to RT signals on those architectures:
- * blackfin h8300 microblaze mips.
- *
- * The arguments other than the sigset_t are assumed ignored.
- */
-<sh,sparc,alpha,ppc,sparc64> int sigsuspend::__sigsuspend_s(sigset_t);
-<arm,frv,i386,m68k,mn10300,s390,s390x> int sigsuspend::__sigsuspend_xxs(int, int, sigset_t);
-#endif
 <s390,s390x,sparc,sparc64> void rt_sigreturn::__sigreturn();
 int kill(pid_t, int);
 <?> unsigned int alarm(unsigned int);
@@ -238,11 +204,15 @@ int setitimer(int, const struct itimerval *, struct itimerval *);
 /*
  * Time-related system calls
  */
-<?> time_t time(time_t *);
 clock_t times(struct tms *);
-int gettimeofday(struct timeval *, struct timezone *);
-int settimeofday(const struct timeval *, const struct timezone *);
-int nanosleep(const struct timespec *, struct timespec *);
+int gettimeofday::__gettimeofday(void *, struct timezone *);
+int settimeofday::__settimeofday(const void *, const struct timezone *);
+<32> int clock_gettime64::clock_gettime(clockid_t, struct timespec *);
+<64> int clock_gettime(clockid_t, struct timespec *);
+<32> int clock_settime64::clock_settime(clockid_t, const struct timespec *);
+<64> int clock_settime(clockid_t, const struct timespec *);
+<32> int clock_nanosleep_time64::__clock_nanosleep(clockid_t, int, const struct timespec *, struct timespec *);
+<64> int clock_nanosleep::__clock_nanosleep(clockid_t, int, const struct timespec *, struct timespec *);
 <?> int pause();
 
 /*

@@ -7,8 +7,6 @@
 #include <sys/types.h>
 #include <sys/syscall.h>
 
-#ifndef __NR_utime
-
 int utime(const char *filename, const struct utimbuf *buf)
 {
 	struct timeval tvp[2];
@@ -20,5 +18,3 @@ int utime(const char *filename, const struct utimbuf *buf)
 
 	return utimes(filename, tvp);
 }
-
-#endif
