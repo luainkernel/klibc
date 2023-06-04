@@ -357,15 +357,6 @@ static void process_timeout_event(struct state *s, time_t now)
 	int ret = 0;
 
 	/*
-	 * Is the link up?  If not, try again in 1 second.
-	 */
-	if (!netdev_running(s->dev)) {
-		s->expire = now + 1;
-		s->state = s->restart_state;
-		return;
-	}
-
-	/*
 	 * If we had an error, restore a sane state to
 	 * restart from.
 	 */
@@ -394,7 +385,7 @@ static void process_timeout_event(struct state *s, time_t now)
 
 	if (ret == -1) {
 		s->state = DEVST_ERROR;
-		s->expire = now + 10;
+		s->expire = now + 1;
 	} else {
 		s->expire = now + s->retry_period;
 
