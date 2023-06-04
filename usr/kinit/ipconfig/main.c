@@ -404,6 +404,12 @@ static void process_timeout_event(struct state *s, time_t now)
 	}
 }
 
+static void process_error_event(struct state *s, time_t now)
+{
+	s->state = DEVST_ERROR;
+	s->expire = now + 1;
+}
+
 static struct state *slist;
 struct netdev *ifaces;
 
@@ -420,8 +426,11 @@ static int do_pkt_recv(int nr, struct pollfd *fds, time_t now)
 	for (i = 0, s = slist; s && nr; s = s->next) {
 		if (s->dev->pkt_fd != fds[i].fd)
 			continue;
-		if (fds[i].revents & POLLRDNORM) {
-			ret |= process_receive_event(s, now);
+		if (fds[i].revents) {
+			if (fds[i].revents & POLLRDNORM)
+				ret |= process_receive_event(s, now);
+			else
+				process_error_event(s, now);
 			nr--;
 		}
 		i++;
