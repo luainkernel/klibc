@@ -80,6 +80,12 @@ For i386 only:
 * CONFIG_REGPARM (bool): Optimise function calls by passing the first
   3 function parameters in registers.
 
+For mips64 only:
+
+* CONFIG_KLIBC_MIPS_USE_CB (bool): Use compact branch instructions.
+  This should be enabled when targetting MIPS R6 and must be disabled
+  for older MIPS ISAs.
+
 Building without kernel source
 ------------------------------
 
