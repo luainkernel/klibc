@@ -13,8 +13,13 @@ KLIBCOPTFLAGS     += -g
 endif
 KLIBCBITSIZE      = 64
 
-# Normal binaries start at 64 KB, so start the libary at 2 MB.
-KLIBCSHAREDFLAGS  = $(LD_IMAGE_BASE_OPT) 0x00200000
+# Normal binaries start at 64 kiB. Jumps can use either a single
+# instruction with offset of ±1 MiB, or two instructions with offset
+# of ±2 GiB. Putting klibc.so close above the executable can cause
+# breakage, so instead swap them around: klibc.so at 64 kiB and
+# executable at 576 kiB.
+KLIBCLDFLAGS      = $(LD_IMAGE_BASE_OPT) 0x90000
+KLIBCSHAREDFLAGS  = $(LD_IMAGE_BASE_OPT) 0x10000
 KLIBCSHAREDFLAGS  += --defsym '__global_pointer$$=0'
 
 # Kernel has never used stack trampolines
