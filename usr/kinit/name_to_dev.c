@@ -1,4 +1,6 @@
 #include <ctype.h>
+#include <dirent.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -74,6 +76,72 @@ fail:
 }
 
 /*
+ * Find dev_t for a block device based on the provided GPT partlabel.
+ * The partlabel to block device mapping is found by scanning all
+ * the entries in /sys/dev/block/, opening the uevent file and picking
+ * the device where the PARTNAME= entry matches partlabel.
+ */
+static dev_t partlabel_to_dev_t(const char *plabel)
+{
+	char path[BUF_SZ];
+	DIR *dir;
+	FILE *fp;
+	struct dirent *dent;
+	char *ret;
+	char line[BUF_SZ];
+	int match_label, major, minor;
+
+	dir = opendir("/sys/dev/block");
+	if (!dir) {
+		dprintf(stderr, "%s: error %i (%s) opening /sys/dev/block\n",
+			__func__, errno, strerror(errno));
+		goto fail;
+	}
+
+	while ((dent = readdir(dir)) != NULL) {
+		if (!strncmp(dent->d_name, ".", 1))
+			continue;
+		snprintf(path, sizeof(path), "/sys/dev/block/%s/uevent",
+			dent->d_name);
+
+		fp = fopen(path, "r");
+		if (fp == NULL) {
+			dprintf(stderr, "kinit %s: error %i (%s) opening %s",
+				__func__, errno, strerror(errno), path);
+			continue;
+		}
+
+		major = 0;
+		minor = 0;
+		match_label = 0;
+		while (!feof(fp)) {
+			ret = fgets(line, sizeof(line), fp);
+			if (ret == NULL)
+				continue;
+			if (!strncmp(line, "MAJOR=", 6))
+				major = atoi(line+6);
+			if (!strncmp(line, "MINOR=", 6))
+				minor = atoi(line+6);
+			if (!strncmp(line, "PARTNAME=", 9)) {
+				line[strcspn(line, "\n")] = 0;
+				if (!strncmp(line + 9, plabel, sizeof(line)-9))
+					match_label = 1;
+			}
+			if (match_label && major && minor) {
+				fclose(fp);
+				closedir(dir);
+				return makedev(major, minor);
+			}
+		}
+		fclose(fp);
+	}
+	closedir(dir);
+
+fail:
+	return (dev_t) 0;
+}
+
+/*
  *	Convert a name into device number.  We accept the following variants:
  *
  *	1) device number in hexadecimal	represents itself
@@ -85,6 +153,7 @@ fail:
  *	6) /dev/<disk_name>p<decimal> - same as the above, that form is
  *	   used when disk name of partitioned disk ends on a digit.
  *	7) an actual block device node in the initramfs filesystem
+ *	8) PARTLABEL=<name> with name being the GPT partition label.
  *
  *	If name doesn't have fall into the categories above, we return 0.
  *	Driverfs is used to check if something is a disk name - it has
@@ -109,6 +178,9 @@ static inline dev_t name_to_dev_t_real(const char *name)
 	/* Are we a multi root line? */
 	if (strchr(name, ','))
 		return Root_MULTI;
+
+	if (!strncmp(name, "PARTLABEL=", 10))
+		return partlabel_to_dev_t(name + 10);
 
 	if (name[0] == '/') {
 		devname = name;
