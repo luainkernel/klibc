@@ -79,7 +79,8 @@ clean-dirs := static shared
 
 # install the shared binaries by preference
 ifdef KLIBCSHAREDFLAGS
-install-y := $(shared-y) shared/reboot shared/poweroff
+install-y := $(shared-y)
 else
-install-y := $(static-y) static/reboot static/poweroff
+install-y := $(static-y)
 endif
+install-link-y := reboot=halt poweroff=halt

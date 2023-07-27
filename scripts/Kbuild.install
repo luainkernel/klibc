@@ -27,6 +27,10 @@ quiet_cmd_install = INSTALL $(install-y)
       cmd_install = $(install-bin) $(install-y) \
                                    $(INSTALLROOT)$(INSTALLDIR)/$(KLIBCCROSS)bin
 
+# Link install command
+quiet_cmd_install_links = LN $(install-link-y)
+      cmd_install_links = $(foreach l, $(install-link-y), ln -f $(INSTALLROOT)$(INSTALLDIR)/$(KLIBCCROSS)bin/$(word 2,$(subst =,$(space),$(l))) $(INSTALLROOT)$(INSTALLDIR)/$(KLIBCCROSS)bin/$(word 1,$(subst =,$(space),$(l))) &&) true
+
 ifeq ($(KLIBC_INSTALL),1)
 # First part - we are descending..
 
@@ -68,6 +72,9 @@ ifneq ($(install-y),)
 	$(call cmd,install)
 else
 	@:
+endif
+ifneq ($(install-link-y),)
+	$(call cmd,install_links)
 endif
 
 # Descending
