@@ -17,6 +17,8 @@
 #
 
 	.text
+#include <asm/nospec-branch.h>
+
 	.align 4
 	.globl setjmp
 	.type setjmp, @function
@@ -32,7 +34,7 @@ setjmp:
 	movq %r14,40(%rdi)
 	movq %r15,48(%rdi)
 	movq %rsi,56(%rdi)		# Return address
-	ret
+	RET
 
 	.size setjmp,.-setjmp
 
@@ -49,6 +51,7 @@ longjmp:
 	movq 32(%rdi),%r13
 	movq 40(%rdi),%r14
 	movq 48(%rdi),%r15
+	ANNOTATE_RETPOLINE_SAFE
 	jmp *56(%rdi)
 
 	.size longjmp,.-longjmp
