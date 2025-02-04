@@ -11,7 +11,7 @@
 #	ra
 #
 
-#include <machine/asm.h>
+#include "machine/asm.h"
 
 LEAF(setjmp)
 	sw	s0,  0(a0)
