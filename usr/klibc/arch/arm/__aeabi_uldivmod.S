@@ -6,18 +6,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "../assembly.h"
-
 // struct { uint64_t quot, uint64_t rem}
 //        __aeabi_uldivmod(uint64_t numerator, uint64_t denominator) {
 //   uint64_t rem, quot;
 //   quot = __udivmoddi4(numerator, denominator, &rem);
 //   return {quot, rem};
 // }
-
-#if defined(__MINGW32__)
-#define __aeabi_uldivmod __rt_udiv64
-#endif
 
         .syntax unified
         .p2align 2
@@ -31,14 +25,6 @@ DEFINE_COMPILERRT_FUNCTION(__aeabi_uldivmod)
         sub	sp, sp, #16
         add	r6, sp, #8
         str	r6, [sp]
-#if defined(__MINGW32__)
-        movs    r6, r0
-        movs    r0, r2
-        movs    r2, r6
-        movs    r6, r1
-        movs    r1, r3
-        movs    r3, r6
-#endif
         bl	SYMBOL_NAME(__udivmoddi4)
         ldr	r2, [sp, #8]
         ldr	r3, [sp, #12]
