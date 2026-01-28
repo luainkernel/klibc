@@ -13,14 +13,17 @@
 //   return {quot, rem};
 // }
 
-.syntax unified
-.p2align 2
-
-.globl __aeabi_uldivmod
-.type __aeabi_uldivmod, %function
+        .syntax unified
+        .p2align 2
+        .globl __aeabi_uldivmod
+        .type __aeabi_uldivmod, %function
 
 __aeabi_uldivmod:
+#if defined(__ARM_FEATURE_PAC_DEFAULT)
+        push    {r6, r12, lr}
+#else
         push    {r6, lr}
+#endif
         sub	sp, sp, #16
         add	r6, sp, #8
         str	r6, [sp]
@@ -28,9 +31,12 @@ __aeabi_uldivmod:
         ldr	r2, [sp, #8]
         ldr	r3, [sp, #12]
         add	sp, sp, #16
+#if defined(__ARM_FEATURE_PAC_DEFAULT)
+        pop     {r6, r12, lr}
+        PAC_RETURN
+#else
         pop     {r6, pc}
-
-.size __aeabi_uldivmod, .-__aeabi_uldivmod
-
-.section .note.GNU-stack,"",%progbits
+#endif
+        .size __aeabi_uldivmod, .-__aeabi_uldivmod
+#        .section .note.GNU-stack,"",@progbits
 
