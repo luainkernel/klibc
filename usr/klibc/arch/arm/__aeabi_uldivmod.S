@@ -13,29 +13,24 @@
 //   return {quot, rem};
 // }
 
-        .syntax unified
-        .p2align 2
-DEFINE_COMPILERRT_FUNCTION(__aeabi_uldivmod)
-        PACBTI_LANDING
-#if defined(__ARM_FEATURE_PAC_DEFAULT)
-        push    {r6, r12, lr}
-#else
+.syntax unified
+.p2align 2
+
+.globl __aeabi_uldivmod
+.type __aeabi_uldivmod, %function
+
+__aeabi_uldivmod:
         push    {r6, lr}
-#endif
         sub	sp, sp, #16
         add	r6, sp, #8
         str	r6, [sp]
-        bl	SYMBOL_NAME(__udivmoddi4)
+        bl	__udivmoddi4
         ldr	r2, [sp, #8]
         ldr	r3, [sp, #12]
         add	sp, sp, #16
-#if defined(__ARM_FEATURE_PAC_DEFAULT)
-        pop     {r6, r12, lr}
-        PAC_RETURN
-#else
         pop     {r6, pc}
-#endif
-END_COMPILERRT_FUNCTION(__aeabi_uldivmod)
 
-NO_EXEC_STACK_DIRECTIVE
+.size __aeabi_uldivmod, .-__aeabi_uldivmod
+
+.section .note.GNU-stack,"",%progbits
 
